@@ -40,7 +40,7 @@ function main() {
 function init() {
   dotenv.config();
 
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', process.env.PORT || 8080);
   sequelize
     .sync({
       force: false,

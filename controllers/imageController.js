@@ -42,10 +42,12 @@ module.exports = class ImageController {
         thumbnail: req.query.thumbnail,
         house_id: req.params.house_id,
       });
-      await House.update(
-        { thumbnail: result.url },
-        { where: { id: req.params.house_id } }
-      );
+      if (result.thumbnail) {
+        await House.update(
+          { thumbnail: result.url },
+          { where: { id: result.house_id } }
+        );
+      }
       const length = result !== null ? 1 : 0;
       res.json({
         message: `created ${length} rows`,
@@ -70,6 +72,15 @@ module.exports = class ImageController {
           where: { id: req.params.id },
         }
       );
+      if (req.query.thumbnail == '1') {
+        const image = await Image.findOne({
+          where: { id: req.params.id },
+        });
+        await House.update(
+          { thumbnail: image.url },
+          { where: { id: image.house_id } }
+        );
+      }
       res.json({ message: `updated ${result} rows` });
     } catch (err) {
       console.error(err);
